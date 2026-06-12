@@ -19,11 +19,11 @@ class SimulationConfig:
     tau_eff_us: float = 0.0
     background_per_ev_year: float = 0.0
     live_time_years_target: float = 1.0
-    chunk_days: float = 36.525
+    chunk_days: float = 365.25
     n_grid: int = 65536
     n_bins: int = 50
     use_gpu: bool = False
-    fit_low_offset_ev: float = -10.0
+    fit_low_offset_ev: float = -900.0
     fit_high_offset_ev: float = 0.1
     fit_method: str = "robust_mle"
     endpoint_weight: float = 10.0
