@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tritium Endpoint Mass Estimate with Finite Resolution and Fit-Window Scaling</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      processEscapes: true,
+      tags: 'ams'
+    },
+    svg: { fontCache: 'global' }
+  };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      max-width: 950px;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+      color: #1f2937;
+    }
+    h1, h2 {
+      line-height: 1.2;
+      color: #111827;
+    }
+    h1 {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.4rem;
+    }
+    h2 {
+      margin-top: 2rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.25rem;
+    }
+    p, li, td, th {
+      font-size: 1rem;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 1rem 0;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem 0.65rem;
+      text-align: left;
+    }
+    th {
+      background: #f3f4f6;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 0.1rem 0.25rem;
+      border-radius: 4px;
+    }
+    .MathJax {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Tritium Endpoint Mass Estimate with Finite Resolution and Fit-Window Scaling</h1>
+
+<p>
+This note describes the revised spreadsheet-style estimate for a <strong>tritium beta endpoint neutrino-mass measurement</strong>.
+It does not address relic neutrino capture. The goal is to estimate the exposure time needed for a specified statistical
+significance using a simple endpoint-counting model, then apply heuristic corrections for finite energy resolution and
+for using a fit window wider than the baseline window.
+</p>
+
+<p>
+The calculation is intentionally approximate. It is meant to be a transparent back-of-the-envelope model and a sanity
+check for a Monte Carlo or likelihood fit.
+</p>
+
+<h2>1. Endpoint variable and ideal spectrum</h2>
+
+<p>Define the endpoint variable</p>
+
+\[
+w = E_0 - E_e
+\]
+
+<p>where \(E_0\) is the endpoint energy and \(E_e\) is the electron kinetic energy. Near the endpoint, ignoring slowly
+varying factors, the beta spectrum is approximated as</p>
+
+\[
+\frac{dN}{dw} \propto w\sqrt{w^2-m_\nu^2}
+\]
+
+<p>for \(w>m_\nu\), and zero for \(w<m_\nu\). For \(m_\nu=0\), this becomes</p>
+
+\[
+\frac{dN}{dw} \propto w^2.
+\]
+
+<h2>2. Effective energy resolution</h2>
+
+<p>
+The calculation uses an effective Gaussian energy resolution \(\sigma_{\rm eff}\), which may include detector resolution
+and source broadening, such as zero-point motion of tritium bound to graphene, if those effects are approximated as
+Gaussian.
+</p>
+
+\[
+\sigma_{\rm eff}^2
+=
+\sigma_{\rm det}^2
++
+\sigma_{\rm zp}^2
++
+\cdots
+\]
+
+<p>If a width is given as FWHM, convert to Gaussian sigma using</p>
+
+\[
+\sigma = \frac{\mathrm{FWHM}}{2.355}.
+\]
+
+<p>The effective FWHM is therefore</p>
+
+\[
+\mathrm{FWHM}_{\rm eff}=2.355\,\sigma_{\rm eff}.
+\]
+
+<h2>3. Reference window: two FWHM</h2>
+
+<p>
+The revised estimate uses a reference analysis window equal to two effective FWHM below the endpoint:
+</p>
+
+\[
+W_0 = 2\,\mathrm{FWHM}_{\rm eff}.
+\]
+
+<p>
+This replaces the earlier practice of choosing an arbitrary narrow endpoint window. A two-FWHM reference window is wide
+enough to be physically meaningful when resolution is finite, while still close enough to the endpoint to retain mass
+sensitivity.
+</p>
+
+<h2>4. Perfect-resolution count estimate for the two-FWHM window</h2>
+
+<p>
+First compute the ideal, perfect-energy-resolution count requirement for a window of width \(W_0\). In a perfect-resolution
+endpoint window \(0<w<W_0\), the ratio of finite-mass counts to massless counts is
+</p>
+
+\[
+r =
+\left(1-\frac{m_\nu^2}{W_0^2}\right)^{3/2}.
+\]
+
+<p>The fractional count deficit is</p>
+
+\[
+\delta = 1-r.
+\]
+
+<p>For a desired significance \(Z\), the required detected counts in the reference window are</p>
+
+\[
+\boxed{
+N_{\rm perfect}(W_0)
+=
+\frac{Z^2}{\delta^2}
+}
+\]
+
+<p>or explicitly,</p>
+
+\[
+\boxed{
+N_{\rm perfect}(W_0)
+=
+\frac{Z^2}{
+\left[
+1-
+\left(1-\frac{m_\nu^2}{W_0^2}\right)^{3/2}
+\right]^2
+}.
+}
+\]
+
+<p>
+This is still the idealized perfect-resolution result. The finite-resolution penalty is applied in the next step.
+</p>
+
+<h2>5. Endpoint event rate in the reference window</h2>
+
+<p>
+For source activity \(A\), endpoint energy \(Q\), and total acceptance factor \(f\), the ideal count rate in a window of
+width \(W_0\) is estimated as
+</p>
+
+\[
+R(W_0)
+=
+A\,f
+\left(\frac{W_0}{Q}\right)^3.
+\]
+
+<p>
+Here \(f\) can include geometric efficiency, upward-hemisphere acceptance, retarding-voltage angular acceptance,
+transport efficiency, and detector efficiency.
+</p>
+
+<p>
+For the specific simple model with only upward-going electrons and a retarding voltage equal to one half of the endpoint
+energy, endpoint electrons pass only for \(\theta<45^\circ\). The angular acceptance relative to all decays is
+</p>
+
+\[
+f_{\rm angular}
+=
+\frac{1}{2}
+\left(1-\cos45^\circ\right)
+=
+\frac{1}{2}
+\left(1-\frac{1}{\sqrt{2}}\right)
+\approx 0.146.
+\]
+
+<p>
+The perfect-resolution exposure time for the two-FWHM reference window is
+</p>
+
+\[
+T_{\rm perfect}(W_0)
+=
+\frac{N_{\rm perfect}(W_0)}{R(W_0)}.
+\]
+
+<h2>6. Finite-resolution penalty</h2>
+
+<p>
+Finite energy resolution smears the endpoint shape. The neutrino-mass effect is diluted when the resolution is comparable
+to or larger than the mass. A simple heuristic penalty is
+</p>
+
+\[
+\boxed{
+P_{\rm res}
+=
+\left[
+1+
+\left(\frac{\sigma_{\rm eff}}{m_\nu}\right)^2
+\right]^2.
+}
+\]
+
+<p>
+This factor has the desired limiting behavior:
+</p>
+
+<ul>
+  <li>If \(\sigma_{\rm eff}\ll m_\nu\), then \(P_{\rm res}\rightarrow 1\).</li>
+  <li>If \(\sigma_{\rm eff}\gg m_\nu\), then \(P_{\rm res}\propto(\sigma_{\rm eff}/m_\nu)^4\).</li>
+</ul>
+
+<p>
+The fourth-power scaling appears because the endpoint spectrum is sensitive to \(m_\nu^2\), and detecting a fractional
+shape distortion statistically requires counts proportional to the inverse square of that fractional distortion.
+</p>
+
+<p>
+After applying the finite-resolution penalty, the two-FWHM exposure estimate is
+</p>
+
+\[
+T_{\rm 2FWHM,res}
+=
+T_{\rm perfect}(W_0)\,P_{\rm res}.
+\]
+
+<h2>7. Fit-window-width scaling</h2>
+
+<p>
+The two-FWHM window is treated as the reference case. A real endpoint fit may use a wider window below the endpoint.
+Let the total fit window width be
+</p>
+
+\[
+W = N_{\rm FWHM}\,\mathrm{FWHM}_{\rm eff},
+\]
+
+<p>
+where \(N_{\rm FWHM}\) is the fit-window width expressed in units of effective FWHM.
+</p>
+
+<p>
+A crude multi-bin information estimate says that the fraction of asymptotic endpoint-shape information captured by a
+window of width \(W\) is approximately
+</p>
+
+\[
+F(W)\approx1-\frac{\sigma_{\rm eff}}{W}.
+\]
+
+<p>In FWHM units, this becomes</p>
+
+\[
+F(N_{\rm FWHM})
+=
+1-\frac{1}{2.355\,N_{\rm FWHM}}.
+\]
+
+<p>
+The reference case is \(N_{\rm FWHM}=2\), so
+</p>
+
+\[
+F(2)
+=
+1-\frac{1}{2.355\times2}
+\approx0.788.
+\]
+
+<p>
+The window-scaling factor relative to the two-FWHM reference case is therefore
+</p>
+
+\[
+\boxed{
+P_{\rm window}
+=
+\frac{F(2)}{F(N_{\rm FWHM})}
+=
+\frac{
+1-\frac{1}{2.355\times2}
+}{
+1-\frac{1}{2.355\,N_{\rm FWHM}}
+}.
+}
+\]
+
+<p>
+For \(N_{\rm FWHM}=2\), \(P_{\rm window}=1\). For wider windows, \(P_{\rm window}<1\), so the required exposure is
+slightly reduced. The maximum possible improvement from making the fit window arbitrarily wide is limited:
+</p>
+
+\[
+P_{\rm window}(\infty)=F(2)\approx0.788.
+\]
+
+<p>
+So, in this heuristic model, widening beyond two FWHM can reduce exposure by at most about 21%.
+</p>
+
+<h2>8. Final exposure estimate</h2>
+
+<p>
+Combining the pieces gives the final estimate
+</p>
+
+\[
+\boxed{
+T_{\rm final}
+=
+T_{\rm perfect}(2\,\mathrm{FWHM}_{\rm eff})
+\left[
+1+\left(\frac{\sigma_{\rm eff}}{m_\nu}\right)^2
+\right]^2
+\frac{
+1-\frac{1}{2.355\times2}
+}{
+1-\frac{1}{2.355\,N_{\rm FWHM}}
+}.
+}
+\]
+
+<p>
+Equivalently, in terms of counts,
+</p>
+
+\[
+\boxed{
+N_{\rm final}
+=
+N_{\rm perfect}(2\,\mathrm{FWHM}_{\rm eff})
+\,P_{\rm res}\,P_{\rm window}.
+}
+\]
+
+<p>
+Then divide by the endpoint count rate in the two-FWHM reference window to get the exposure time:
+</p>
+
+\[
+T_{\rm final}
+=
+\frac{N_{\rm final}}{R(W_0)}.
+\]
+
+<h2>9. Why the wider-window improvement is modest</h2>
+
+<p>
+The endpoint mass information does not grow in proportion to the raw number of beta counts in a wider window. Far below
+the endpoint, the spectrum has many more counts, but the fractional distortion from neutrino mass is much smaller.
+</p>
+
+<p>
+For \(w\gg m_\nu\),
+</p>
+
+\[
+w\sqrt{w^2-m_\nu^2}
+\approx
+w^2-\frac{m_\nu^2}{2}.
+\]
+
+<p>
+The absolute spectral difference is roughly constant, but the massless spectrum grows as \(w^2\). Therefore, the
+information density roughly scales like
+</p>
+
+\[
+\frac{(\Delta S)^2}{S_0}
+\sim
+\frac{m_\nu^4}{w^2}.
+\]
+
+<p>
+This makes the information integral approach a finite limit as the fit window is widened. That is why going from
+two FWHM to a much wider window helps only modestly in this simple model.
+</p>
+
+<h2>10. Example window factors</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Fit window width</th>
+      <th>Information fraction \(F\)</th>
+      <th>Exposure factor relative to 2 FWHM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(1\,\mathrm{FWHM}\)</td>
+      <td>\(0.575\)</td>
+      <td>\(1.37\)</td>
+    </tr>
+    <tr>
+      <td>\(2\,\mathrm{FWHM}\)</td>
+      <td>\(0.788\)</td>
+      <td>\(1.00\)</td>
+    </tr>
+    <tr>
+      <td>\(3\,\mathrm{FWHM}\)</td>
+      <td>\(0.859\)</td>
+      <td>\(0.918\)</td>
+    </tr>
+    <tr>
+      <td>\(5\,\mathrm{FWHM}\)</td>
+      <td>\(0.915\)</td>
+      <td>\(0.861\)</td>
+    </tr>
+    <tr>
+      <td>\(10\,\mathrm{FWHM}\)</td>
+      <td>\(0.958\)</td>
+      <td>\(0.823\)</td>
+    </tr>
+    <tr>
+      <td>Infinite</td>
+      <td>\(1.000\)</td>
+      <td>\(0.788\)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>11. Important caveats</h2>
+
+<ul>
+  <li>This is a heuristic statistical estimate, not a full neutrino-mass fit.</li>
+  <li>The two-FWHM reference window is a convention chosen to avoid the unphysical behavior of using a one-sigma window as the baseline.</li>
+  <li>The finite-resolution penalty is approximate. A full model should convolve the beta spectrum with the detector/source response.</li>
+  <li>The fit-window scaling assumes that endpoint energy, normalization, background, and response function are known.</li>
+  <li>In a real experiment, a wider window can help constrain nuisance parameters, but it can also introduce additional systematic sensitivity.</li>
+  <li>For tritiated graphene, zero-point motion and final-state structure should ultimately be represented by a measured or calculated source-response function, not only by a Gaussian width.</li>
+</ul>
+
+<h2>12. Monte Carlo version of the same idea</h2>
+
+<p>
+A Monte Carlo can implement this more directly:
+</p>
+
+<ol>
+  <li>Generate true beta energies from \(dN/dw\propto w\sqrt{w^2-m_\nu^2}\).</li>
+  <li>Apply angular and retarding-voltage acceptance.</li>
+  <li>Smear measured energy with \(\sigma_{\rm eff}\).</li>
+  <li>Histogram events over a fit window of \(N_{\rm FWHM}\,\mathrm{FWHM}_{\rm eff}\) below the endpoint.</li>
+  <li>Compare or fit spectra generated with \(m_\nu=0\) and finite \(m_\nu\).</li>
+</ol>
+
+<p>
+The spreadsheet estimate above is a compact approximation to that Monte Carlo or likelihood calculation.
+</p>
+
+</body>
+</html>
